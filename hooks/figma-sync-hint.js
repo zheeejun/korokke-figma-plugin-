@@ -1,4 +1,4 @@
-// PostToolUse hook: after Claude edits an ap-* component in ui_korokke, remind it to run the figma-sync agent.
+// PostToolUse hook: after Claude edits an ap-* component in ui_korokke, remind it to sync Figma via the skill.
 // Only fires inside a ui_korokke checkout (detected by src/ap-components-lib next to src/app).
 const fs = require('fs');
 let s = '';
@@ -11,7 +11,7 @@ process.stdin.on('data', d => (s += d)).on('end', () => {
     process.stdout.write(JSON.stringify({
       hookSpecificOutput: {
         hookEventName: 'PostToolUse',
-        additionalContext: `Component ${m[2]} changed. When you are done editing it (not after every single edit), launch the figma-sync agent once with the folder ${folder} so Figma matches the code, and relay its report.`,
+        additionalContext: `Component ${m[2]} changed. When you are done editing it (not after every single edit), sync Figma once using the export-component-to-figma skill (section 6, update) for the folder ${folder}.`,
       },
     }));
   } catch {

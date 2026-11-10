@@ -1,6 +1,6 @@
 ---
 name: export-component-to-figma
-description: Export an Angular component from the ui_korokke repo (src/app/components/ap-*) into the team's Figma "Components" file (fileKey x0yURGG3vM0bRRVJdwTrLg), rebuilt from ap-components-lib library instances (Button (Core), AP Toast (Core), icons, palette variables) — one page per component, with a reusable component plus a 390×844 mobile preview frame. Use whenever the user says "export to figma", "push this component to Figma", "build ap-xxx in Figma", "add this to the Components file", or pastes a figma.com/design/x0yURGG3vM0bRRVJdwTrLg link while working in a ui_korokke component folder — even if they don't name the library.
+description: Export an Angular component from the ui_korokke repo (src/app/components/ap-*) into the team's Figma "Components" file (fileKey x0yURGG3vM0bRRVJdwTrLg), rebuilt from ap-components-lib library instances (Button (Core), AP Toast (Core), icons, palette variables) — one page per component, with a reusable component plus a 390×844 mobile preview frame. Use whenever the user says "export to figma", "push this component to Figma", "build ap-xxx in Figma", "add this to the Components file", or pastes a figma.com/design/x0yURGG3vM0bRRVJdwTrLg link while working in a ui_korokke component folder — even if they don't name the library. Also use it to sync / update a component that already exists in Figma after its code changed ("sync figma for ap-xxx", "update figma", "I changed ap-xxx").
 ---
 
 # Export a ui_korokke component to Figma
@@ -16,7 +16,10 @@ on every `use_figma` call.
 
 ## 1. Read the source
 
-In the component folder read `*.component.html` and `*.component.ts`. Note:
+In the component folder read `*.component.html`, `*.component.ts` and
+`*.component.css`. Tailwind is v4: `rounded-sm`/`rounded` = 4, `rounded-md` = 6,
+`rounded-lg` = 8; `text-sm` = 14/20, `text-base` = 16/24; spacing unit 4px;
+`font-bold` = Bold (not Semi Bold). Note:
 - which `ap-*` library children are used (`ap-button`, `ap-toast`, …) and their
   inputs: `variant`, `size` (default `medium`), `accentColor`, `icon`, label text
   (use the i18n fallback string, e.g. `'WATCH AGAIN'`);
@@ -33,7 +36,9 @@ Parse the URL: `node-id=98-80` → `98:80`. `create_session` with the file key,
 then `get_metadata` on that node. The file convention is **one page per
 component, named after the selector** (e.g. `ap-history-popup-replay`). If the
 target is an unnamed empty page (`Page 24`), build there and offer to rename it.
-If the page already has content, place new nodes to the right of existing ones.
+No link given → find the page named after the selector.
+**If that page already holds this component, skip to section 6 (update)** — do
+not build a second copy. Other unrelated content: place new nodes to its right.
 
 ## 3. Resolve library assets
 
@@ -116,3 +121,25 @@ labels ("Zinc", "Message"). Then tell the user, briefly: the page, a link to the
 component (`…?node-id=<compId with - instead of :>`), what was built, which
 library assets it uses, and the component properties. Offer renaming an
 unnamed page.
+
+## 6. Update an existing component (code changed)
+
+Code is the source of truth. Make Figma match it with the smallest change.
+
+1. Read the source (section 1) and `git diff HEAD -- <folder>` to see what
+   changed — but compare everything, not only the diff.
+2. One read-only `use_figma` on the page: component sets, variant names,
+   properties, padding, radius, fills with bound variable ids, text font/size.
+3. Diff code vs Figma, then apply only the differences in ONE `use_figma` call:
+   - **Mutate in place. Never delete-and-recreate** an existing component or
+     variant — instances elsewhere must stay linked.
+   - Colours: bind ap-components-lib `palette/*` variables, never hex.
+   - New appearance-changing `input()` → new variant or BOOLEAN property;
+     removed input → remove the property.
+   - Keep the 390×844 preview frame; add it if missing.
+   - Update `description` on changed component sets.
+4. Screenshot each changed component set and the preview frame; check as in
+   section 5.
+5. Report briefly: page link, a table `property: was → now`, and anything in the
+   code that looks like a bug (e.g. disabled brighter than enabled) — report it,
+   don't bend Figma away from the code. If nothing differed, say "no changes".

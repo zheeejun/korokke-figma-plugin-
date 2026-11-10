@@ -5,7 +5,7 @@
     {
       "name": "korokke-figma",
       "source": "./",
-      "description": "ui_korokke ↔ Figma Components sync (skill + agent + hook)."
+      "description": "ui_korokke ↔ Figma Components sync (skill + hook)."
     }
   ]
 }
