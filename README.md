@@ -18,6 +18,8 @@ Needs the Figma plugin signed in, with edit access to the Components file.
 
 ## Use
 
+Full walkthrough (中文): [WORKFLOW.md](WORKFLOW.md)
+
 - `export ap-xxx to figma` – first time
 - `sync figma for ap-xxx` – after you changed code yourself
 - Claude's own edits to a component trigger the sync automatically.
