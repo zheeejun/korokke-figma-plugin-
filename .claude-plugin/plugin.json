@@ -1,0 +1,5 @@
+{
+  "name": "korokke-figma",
+  "version": "0.1.0",
+  "description": "Keep ui_korokke ap-* components in sync with the Figma Components file: export skill, figma-sync agent, and a hook that triggers the sync after Claude edits a component."
+}

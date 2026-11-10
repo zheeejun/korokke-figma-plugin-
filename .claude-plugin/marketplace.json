@@ -1,0 +1,11 @@
+{
+  "name": "korokke-figma-plugin",
+  "owner": { "name": "zheeejun" },
+  "plugins": [
+    {
+      "name": "korokke-figma",
+      "source": "./",
+      "description": "ui_korokke ↔ Figma Components sync (skill + agent + hook)."
+    }
+  ]
+}
